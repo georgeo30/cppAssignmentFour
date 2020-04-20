@@ -24,6 +24,7 @@ void Cluster::readFolder()
     struct dirent *dir;
     //OPENING THE DIRECTORY
     d = opendir(dataset);
+    int imageCounter = 0;
     if (d)
     {
         string fileName;
@@ -34,8 +35,9 @@ void Cluster::readFolder()
             //FILTERING OUT THE CURRENT AND PARENT DIRECTORY WHICH GETS ADDED FOR SOME REASON
             if ((fileName != ".") && (fileName != ".."))
             {
-                readEachFile(fileName);
+                readEachFile(fileName, imageCounter);
             }
+            imageCounter++;
         }
         //CLOSING THE DIRECTORY
         closedir(d);
@@ -43,7 +45,7 @@ void Cluster::readFolder()
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
-void Cluster::readEachFile(string fileName)
+void Cluster::readEachFile(string fileName, int imageCounter)
 {
     string fName(dataset);
     string sliceUrl = "./" + fName + "/" + fileName;
@@ -75,6 +77,7 @@ void Cluster::readEachFile(string fileName)
             {
 
                 cout << "second line is" << line << endl;
+                //GETTING THE NROWS AND NCOLUMNS FROM THE HEADER INFORMATION
                 std::istringstream ss(line);
                 std::string token;
                 ss >> Nrows;
@@ -92,9 +95,18 @@ void Cluster::readEachFile(string fileName)
         //NOW WE CAN GATHER THE BLOCK BYTES
         else
         {
-            getline(ppmFile, line);
-            //cout<<line.at(0)<<endl;
-            //cout<<sliceUrl<<endl;
+            cout<<ppmFile.get()<<endl;
+            // fileList.push_back(new unsigned char *[Nrows]);
+
+            // for (int j = 0; j < Nrows; j++)
+            // {
+            //     fileList[imageCounter][j] = new unsigned char[Ncols];
+            //     for (int k = 0; k < Ncols; k++)
+            //     {
+            //         fileList[imageCounter][j][k] = ppmFile.get();
+            //     }
+            // }
+            
         }
     }
 
