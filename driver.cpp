@@ -1,15 +1,18 @@
 #include <string>
 #include <iostream>
 #include "cluster.h"
+
 using namespace std;
 
 int main(int argc, char *argv[])
 {
+    string dataset;
     string outputFile;
     int noOfClusters;
     int histogramWidth;
     if (argc > 2)
     {
+        dataset = argv[1];
         string s(argv[2]);
         if (s == "-o")
         {
@@ -90,4 +93,8 @@ int main(int argc, char *argv[])
     cout << outputFile << endl;
     cout << noOfClusters << endl;
     cout << histogramWidth << endl;
+
+    THNGEO002::Cluster c(outputFile,noOfClusters,histogramWidth,argv[1]);
+    c.readFolder();
+
 }
