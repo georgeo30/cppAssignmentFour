@@ -18,13 +18,14 @@ private:                                  // private members
     string outputFile;
     int noOfClusters;
     int histogramWidth;
-    vector<string> fileList;
+    
+    std::vector<unsigned char **> fileList;
     
 public:                                   // public members
     Cluster(string outputFile,int noOfClusters,int histogramWidth,const char* dataset);                           //constructor - define in .cpp
     ~Cluster();                          // destructor - define in .cpp file
     void readFolder(); //method to read files from the folder into a vector
-   
+    void readEachFile(std::string fileName); //method to read each file and store ts greyscale equivalent    
 };
 
 } // namespace THNGEO002
