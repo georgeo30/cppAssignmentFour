@@ -68,13 +68,17 @@ void Cluster::readEachFile(string fileName)
             //CHEECKING TO SEE WHETHER IT IS A COMMENT LINE
             if (line.at(0) == '#')
             {
-                cout<<"comment line in header"<<endl;
+                cout << "comment line in header" << endl;
             }
             //IF NOT COMMENT LINE THEN EXTRACT THE ROWS AND COLUMNS
             else
             {
 
                 cout << "second line is" << line << endl;
+                std::istringstream ss(line);
+                std::string token;
+                ss >> Nrows;
+                ss >> Ncols;
                 track++;
             }
         }
