@@ -30,38 +30,71 @@ void Cluster::readFolder()
         while ((dir = readdir(d)) != NULL)
         {
 
-            fileName=dir->d_name;
+            fileName = dir->d_name;
             //FILTERING OUT THE CURRENT AND PARENT DIRECTORY WHICH GETS ADDED FOR SOME REASON
-            if ((fileName != "." )&& (fileName != ".."))
+            if ((fileName != ".") && (fileName != ".."))
             {
                 readEachFile(fileName);
             }
-            
         }
         //CLOSING THE DIRECTORY
         closedir(d);
     }
-    
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
 void Cluster::readEachFile(string fileName)
 {
     string fName(dataset);
-    string sliceUrl ="./"+ fName + "/"+fileName;
+    string sliceUrl = "./" + fName + "/" + fileName;
     ifstream ppmFile;
+    string line;
     ppmFile.open(sliceUrl, ios::binary);
+    int track = 0;
     while (!ppmFile.eof())
     {
-        
-         getline(ppmFile,sliceUrl);
-         //cout<<sliceUrl<<endl;
+        //CHECKS FOR FIRST LINE
+        if (track == 0)
+        {
+            getline(ppmFile, line);
+            cout << "First line is" << line << endl;
+            track++;
+        }
+        //CHECKS FOR SECOND LINE BUT TAKES THE COMMENT LINES INTO ACCOUNT
+        else if (track == 1)
+        {
+            getline(ppmFile, line);
+
+            //CHEECKING TO SEE WHETHER IT IS A COMMENT LINE
+            if (line.at(0) == '#')
+            {
+                cout<<"comment line in header"<<endl;
+            }
+            //IF NOT COMMENT LINE THEN EXTRACT THE ROWS AND COLUMNS
+            else
+            {
+
+                cout << "second line is" << line << endl;
+                track++;
+            }
+        }
+        //EXTRACTING THE INTENSITY RANGE
+        else if (track == 2)
+        {
+            getline(ppmFile, line);
+            cout << "Third line is" << line << endl;
+            track++;
+        }
+        //NOW WE CAN GATHER THE BLOCK BYTES
+        else
+        {
+            getline(ppmFile, line);
+            //cout<<line.at(0)<<endl;
+            //cout<<sliceUrl<<endl;
+        }
     }
 
-    
     ppmFile.close();
-    
-    
 }
 
 } // namespace THNGEO002
