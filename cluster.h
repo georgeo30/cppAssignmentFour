@@ -28,6 +28,7 @@ public:                                   // public members
     ~Cluster();                          // destructor - define in .cpp file
     void readFolder(); //method to read files from the folder into a vector
     void readEachFile(std::string fileName,int c); //method to read each file and store ts greyscale equivalent    
+    void imageFeature(); //method to create the histogram image feature
 };
 
 } // namespace THNGEO002
