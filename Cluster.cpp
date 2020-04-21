@@ -42,16 +42,16 @@ void Cluster::readFolder()
         //CLOSING THE DIRECTORY
         closedir(d);
     }
-    ofstream tt;
-    tt.open("test.ppm");
-      for (int i = 0; i < 32; i++)
-    {
-        for (int r = 0; r < 32; r++)
-        {
-             tt<<fileList[1][i][r]<<" ";
-        }
-        tt<<endl;
-    }
+    // ofstream tt;
+    // tt.open("test.ppm");
+    //   for (int i = 0; i < 32; i++)
+    // {
+    //     for (int r = 0; r < 32; r++)
+    //     {
+    //          tt<<fileList[41][i][r]<<" ";
+    //     }
+    //     tt<<endl;
+    // }
   
     
 }
