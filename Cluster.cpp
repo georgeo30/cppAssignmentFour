@@ -24,7 +24,6 @@ void Cluster::readFolder()
     struct dirent *dir;
     //OPENING THE DIRECTORY
     d = opendir(dataset);
-    int imageCounter = 0;
     if (d)
     {
         string fileName;
@@ -35,17 +34,18 @@ void Cluster::readFolder()
             //FILTERING OUT THE CURRENT AND PARENT DIRECTORY WHICH GETS ADDED FOR SOME REASON
             if ((fileName != ".") && (fileName != ".."))
             {
-                readEachFile(fileName, imageCounter);
+                readEachFile(fileName);
             }
-            imageCounter++;
         }
         //CLOSING THE DIRECTORY
         closedir(d);
     }
+    
+    
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
-void Cluster::readEachFile(string fileName, int imageCounter)
+void Cluster::readEachFile(string fileName)
 {
     string fName(dataset);
     string sliceUrl = "./" + fName + "/" + fileName;
@@ -93,21 +93,25 @@ void Cluster::readEachFile(string fileName, int imageCounter)
             track++;
         }
         //NOW WE CAN GATHER THE BLOCK BYTES
-        else
+        else if(track==3)
         {
-            cout<<ppmFile.get()<<endl;
-            // fileList.push_back(new unsigned char *[Nrows]);
-
-            // for (int j = 0; j < Nrows; j++)
-            // {
-            //     fileList[imageCounter][j] = new unsigned char[Ncols];
-            //     for (int k = 0; k < Ncols; k++)
-            //     {
-            //         fileList[imageCounter][j][k] = ppmFile.get();
-            //     }
-            // }
             
+            unsigned char *gf[Nrows];
+            for (int j = 0; j < Nrows; j++)
+            {
+                gf[j] = new unsigned char[Ncols];
+                for (int k = 0; k < Ncols; k++)
+                {
+                    int gs= (0.21 * (ppmFile.get())) + (0.72 * (ppmFile.get()) + (0.07 * (ppmFile.get())));
+                    cout<<gs;
+                }
+                cout<<endl;
+            }
+            fileList.push_back(gf);
+            ppmFile.get();
+
         }
+       
     }
 
     ppmFile.close();
