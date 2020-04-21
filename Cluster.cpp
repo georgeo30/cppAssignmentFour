@@ -23,6 +23,7 @@ void Cluster::readFolder()
     DIR *d;
     struct dirent *dir;
     //OPENING THE DIRECTORY
+    int c=0;
     d = opendir(dataset);
     if (d)
     {
@@ -34,18 +35,29 @@ void Cluster::readFolder()
             //FILTERING OUT THE CURRENT AND PARENT DIRECTORY WHICH GETS ADDED FOR SOME REASON
             if ((fileName != ".") && (fileName != ".."))
             {
-                readEachFile(fileName);
+                readEachFile(fileName,c);
+                c++;
             }
         }
         //CLOSING THE DIRECTORY
         closedir(d);
     }
-    
+    ofstream tt;
+    tt.open("test.ppm");
+      for (int i = 0; i < 32; i++)
+    {
+        for (int r = 0; r < 32; r++)
+        {
+             tt<<fileList[1][i][r]<<" ";
+        }
+        tt<<endl;
+    }
+  
     
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
-void Cluster::readEachFile(string fileName)
+void Cluster::readEachFile(string fileName,int c)
 {
     string fName(dataset);
     string sliceUrl = "./" + fName + "/" + fileName;
@@ -93,21 +105,19 @@ void Cluster::readEachFile(string fileName)
             track++;
         }
         //NOW WE CAN GATHER THE BLOCK BYTES
-        else if(track==3)
+        else
         {
             
-            unsigned char *gf[Nrows];
+            fileList.push_back(new  unsigned char *[Nrows]);
             for (int j = 0; j < Nrows; j++)
             {
-                gf[j] = new unsigned char[Ncols];
+                fileList[c][j] = new unsigned char[Ncols];
                 for (int k = 0; k < Ncols; k++)
                 {
                     int gs= (0.21 * (ppmFile.get())) + (0.72 * (ppmFile.get()) + (0.07 * (ppmFile.get())));
-                    cout<<gs;
+                    fileList[c][j][k]=gs;
                 }
-                cout<<endl;
             }
-            fileList.push_back(gf);
             ppmFile.get();
 
         }
@@ -115,6 +125,7 @@ void Cluster::readEachFile(string fileName)
     }
 
     ppmFile.close();
+     
 }
 
 } // namespace THNGEO002
