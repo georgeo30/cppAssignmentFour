@@ -21,7 +21,8 @@ private:                                  // private members
     int Nrows;
     int Ncols;
     
-    std::vector<unsigned char **> fileList;
+    std::vector<int **> fileList;
+    std::vector<int *>histogramArray;
     
 public:                                   // public members
     Cluster(string outputFile,int noOfClusters,int histogramWidth,const char* dataset);                           //constructor - define in .cpp

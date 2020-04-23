@@ -24,7 +24,7 @@ void Cluster::readFolder()
     DIR *d;
     struct dirent *dir;
     //OPENING THE DIRECTORY
-    int c=0;
+    int c = 0;
     d = opendir(dataset);
     if (d)
     {
@@ -36,28 +36,28 @@ void Cluster::readFolder()
             //FILTERING OUT THE CURRENT AND PARENT DIRECTORY WHICH GETS ADDED FOR SOME REASON
             if ((fileName != ".") && (fileName != ".."))
             {
-                cout<<fileName<<endl;
-                readEachFile(fileName,c);
+                //cout<<fileName<<endl;
+                readEachFile(fileName, c);
                 c++;
             }
         }
         //CLOSING THE DIRECTORY
         closedir(d);
     }
-    
-      for (int i = 0; i < 32; i++)
-    {
-        for (int r = 0; r < 32; r++)
-        {
-             cout<<fileList[0][i][r]*1<<" ";
-        }
-        cout<<endl;
-    }
+
     imageFeature();
+    //  for (int i = 0; i < 32; i++)
+    // {
+    //     for (int r = 0; r < 32; r++)
+    //     {
+    //          cout<<fileList[0][i][r]*1<<" ";
+    //     }
+    //     cout<<endl;
+    // }
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
-void Cluster::readEachFile(string fileName,int c)
+void Cluster::readEachFile(string fileName, int c)
 {
     string fName(dataset);
     string sliceUrl = "./" + fName + "/" + fileName;
@@ -107,48 +107,64 @@ void Cluster::readEachFile(string fileName,int c)
         //NOW WE CAN GATHER THE BLOCK BYTES
         else
         {
-            
-            fileList.push_back(new  unsigned char *[Nrows]);
+
+            fileList.push_back(new int *[Nrows]);
             for (int j = 0; j < Nrows; j++)
             {
-                fileList[c][j] = new unsigned char[Ncols];
+                fileList[c][j] = new int[Ncols];
                 for (int k = 0; k < Ncols; k++)
                 {
-                    int gs= (0.21 * (ppmFile.get())) + (0.72 * (ppmFile.get()) + (0.07 * (ppmFile.get())));
+                    int gs = (0.21 * ppmFile.get()) + (0.72 * ppmFile.get()) + (0.07 * ppmFile.get());
                     //cout<<gs;
-                    fileList[c][j][k]=gs;
+                    fileList[c][j][k] = gs;
                 }
                 //cout<<endl;
             }
             ppmFile.get();
-
         }
-       
     }
 
     ppmFile.close();
-     
 }
 //METHOD TO CREATE THE HISTOGRAM IMAGE FEATURE
-void Cluster::imageFeature(){
-    int range =round(256.0/histogramWidth);
-    int histogram[range]={0};
-    
-        for (int j = 0; j < Nrows; j++)
+void Cluster::imageFeature()
+{
+
+
+    int histogramSize = ceil(256 / histogramWidth);
+    for (int imageC = 0; imageC < fileList.size(); imageC++)
+    {
+        histogramArray.push_back(new int[histogramSize]);
+        for (int k = 0; k < histogramSize; k++)
         {
-            for (int  k= 0; k < Ncols; k++)
+            histogramArray[imageC][k]=0;
+        }
+        
+        for (int i = 0; i < Nrows; i++)
+        {
+            for (int j = 0; j < Ncols; j++)
             {
-                histogram[fileList[0][j][k]/histogramWidth]++;
+                int val = floor(fileList[imageC][i][j] / histogramWidth);
+
+                histogramArray[imageC][val]++;
             }
             
         }
         
-    
-    
-    for (int i = 0; i < range; i++)
-    {
-        cout<<i<<" -----------> "<<histogram[i]<<endl;
     }
-    
+
+for (int imageC = 0; imageC < histogramArray.size(); imageC++)
+    {
+        for (int i = 0; i < histogramSize; i++)
+        {
+            cout<<i<<"======>"<< histogramArray[imageC][i]<<endl;
+            
+        }
+        
+    }
+   
+
+        
+
 }
 } // namespace THNGEO002
