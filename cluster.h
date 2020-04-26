@@ -39,6 +39,7 @@ public:                                   // public members
     void imageFeature(); //method to create the histogram image feature
     void initializeClusters(); //initialize clusters INITIALIZATION STEP 
     void adjustMeans();
+    void iterationCluster();
 };
 
 } // namespace THNGEO002

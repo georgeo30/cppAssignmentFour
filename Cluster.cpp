@@ -57,6 +57,7 @@ void Cluster::readFolder()
     // }
     initializeClusters();
     adjustMeans();
+    iterationCluster();
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
@@ -209,15 +210,15 @@ void Cluster::initializeClusters()
         matrix[clusterItBelongsToo].push_back(i);
     }
 
-    // for (int i = 0; i < matrix.size(); i++)
-    // {
-    //     for (int j = 0; j < matrix[i].size(); j++)
-    //     {
-    //         cout << i << " " << j << " =====> " << matrix[i][j] << endl;
-    //     }
-    //     cout << endl
-    //          << endl;
-    // }
+    for (int i = 0; i < matrix.size(); i++)
+    {
+        for (int j = 0; j < matrix[i].size(); j++)
+        {
+            cout << i << " " << j << " =====> " << matrix[i][j] << endl;
+        }
+        cout << endl
+             << endl;
+    }
 }
 
 void Cluster::adjustMeans()
@@ -237,6 +238,43 @@ void Cluster::adjustMeans()
             clusterMeans[i][k] = total / matrix[i].size();
         }
     }
+}
+void Cluster::iterationCluster()
+{
+    matrix.clear();
+    matrix.resize(noOfClusters);
+    for (int i = 0; i < histogramArray.size(); i++)
+    {
+        int clusterItBelongsToo;
+        double mean = (__DBL_MAX__);
+
+        for (int j = 0; j < matrix.size(); j++)
+        {
+
+            double meanVal = 0;
+
+            for (int k = 0; k < histogramSize; k++)
+            {
+
+                int val = histogramArray[i][k] - clusterMeans[j][k];
+                int square = val * val;
+                meanVal += square;
+            }
+            double distance = sqrt(meanVal);
+            //CONDITION TO SEE IF IT IS SMALLER THAN PREVIOUS CLUSTER
+            if (distance <= mean)
+            {
+                //IF SMALLER THEN SET NEW MEAN TO THIS AND JOIN THIS CLUSTER
+                mean = distance;
+                clusterItBelongsToo = j;
+            }
+        }
+        cout << clusterItBelongsToo << endl;
+        matrix[clusterItBelongsToo].push_back(i);
+    }
+    
+    
+
 }
 
 } // namespace THNGEO002
