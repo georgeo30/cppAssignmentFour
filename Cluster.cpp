@@ -55,7 +55,7 @@ void Cluster::readFolder()
     //     }
     //     cout<<endl;
     // }
-    clusterImages();
+    initializeClusters();
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
@@ -163,15 +163,16 @@ void Cluster::imageFeature()
 
     //     }
 }
-void Cluster::clusterImages()
+void Cluster::initializeClusters()
 {
     //POPULATING THE CLUSTER MATRIX WITH INITIAL HISTOGRAMS
     for (int i = 0; i < noOfClusters; i++)
     {
         int ranVal = rand() % (histogramArray.size());
         vector<int> temp;
+        meansZZ.push_back(ranVal);
         temp.push_back(ranVal);
-        matrix.push_back(temp);
+        matrix.resize(noOfClusters);
     }
     //LOOPING THROUGH THE HISTOGRAMS TO ADD TO CLUSTERS
     for (int i = 0; i < histogramArray.size(); i++)
@@ -188,7 +189,7 @@ void Cluster::clusterImages()
             for (int k = 0; k < histogramSize; k++)
             {
 
-                int val = histogramArray[matrix[j][0]][k] - histogramArray[i][k];
+                int val = histogramArray[meansZZ[j]][k] - histogramArray[i][k];
                 int square = val * val;
                 bSquareTotal += square;
             }
@@ -216,5 +217,27 @@ void Cluster::clusterImages()
         cout << endl
              << endl;
     }
+
+    adjustMeans();
 }
+
+void Cluster::adjustMeans()
+{
+    for (int i = 0; i < noOfClusters; i++)
+    {
+        clusterMeans.push_back(new int[histogramSize]);
+        for (int k = 0; k < histogramSize; k++)
+
+        {
+            double total = 0;
+
+            for (int j = 0; j < matrix[i].size(); j++)
+            {
+                total += histogramArray[matrix[i][j]][k];
+            }
+            cout << k << " ===========> " << total / matrix[i].size() << endl;
+        }
+    }
+}
+
 } // namespace THNGEO002

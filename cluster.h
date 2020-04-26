@@ -27,6 +27,9 @@ private:                                  // private members
     std::vector<int **> fileList;
     std::vector<int *>histogramArray;
     std::vector<std::vector<int>> matrix;
+    std::vector<double> meansZZ;
+        std::vector<int *>clusterMeans;
+
     
 public:                                   // public members
     Cluster(string outputFile,int noOfClusters,int histogramWidth,const char* dataset);                           //constructor - define in .cpp
@@ -34,7 +37,8 @@ public:                                   // public members
     void readFolder(); //method to read files from the folder into a vector
     void readEachFile(std::string fileName,int c); //method to read each file and store ts greyscale equivalent    
     void imageFeature(); //method to create the histogram image feature
-    void clusterImages(); 
+    void initializeClusters(); //initialize clusters INITIALIZATION STEP 
+    void adjustMeans();
 };
 
 } // namespace THNGEO002
