@@ -165,6 +165,7 @@ void Cluster::imageFeature()
 }
 void Cluster::clusterImages()
 {
+    //POPULATING THE CLUSTER MATRIX WITH INITIAL HISTOGRAMS
     for (int i = 0; i < noOfClusters; i++)
     {
         int ranVal = rand() % (histogramArray.size());
@@ -172,35 +173,38 @@ void Cluster::clusterImages()
         temp.push_back(ranVal);
         matrix.push_back(temp);
     }
+    //LOOPING THROUGH THE HISTOGRAMS TO ADD TO CLUSTERS
     for (int i = 0; i < histogramArray.size(); i++)
     {
+        //CLUSTER NUMBER THAT THE IMAGE WILL BELONG TOO
         int clusterItBelongsToo;
+        //INITIAL MEAN
         double mean = (__DBL_MAX__);
-
+        //LOOPING THROUGH THE NUMBER OF PIXELS
         for (int j = 0; j < matrix.size(); j++)
         {
-            int addition = 0;
-
+            int bSquareTotal = 0;
+            //LOOPING THROUGH THE PIXELS AND PERFORMING CALCULATION
             for (int k = 0; k < histogramSize; k++)
             {
 
                 int val = histogramArray[matrix[j][0]][k] - histogramArray[i][k];
                 int square = val * val;
-                addition += square;
+                bSquareTotal += square;
             }
-            double distance = sqrt(addition);
+
+            double distance = sqrt(bSquareTotal);
+
+            //CONDITION TO SEE IF IT IS SMALLER THAN PREVIOUS CLUSTER
             if (distance <= mean)
             {
+                //IF SMALLER THEN SET NEW MEAN TO THIS AND JOIN THIS CLUSTER
                 mean = distance;
                 clusterItBelongsToo = j;
             }
         }
+        //ASSIGN TO THE CORRESPONDING CLUSTER
         matrix[clusterItBelongsToo].push_back(i);
-
-        // if (distance < mean)
-        // {
-        //     mean = distance;
-        // }
     }
 
     for (int i = 0; i < matrix.size(); i++)
