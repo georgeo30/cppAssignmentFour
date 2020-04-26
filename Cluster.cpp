@@ -199,7 +199,7 @@ void Cluster::clusterImages()
                 
             }
         }
-        cout << clusterItBelongsToo << endl;
+        cout<<i<<endl;
         matrix[clusterItBelongsToo].push_back(i);
 
         // if (distance < mean)
@@ -212,7 +212,7 @@ void Cluster::clusterImages()
     {
         for (int j = 0; j < matrix[i].size(); j++)
         {
-            cout<<i<<" "<<j<<" =====> "<<matrix[i][j]<<endl;
+            cout<<matrix[i][j]<<endl;
         }
         cout<<endl<<endl;
 
