@@ -37,6 +37,7 @@ void Cluster::readFolder()
             if ((fileName != ".") && (fileName != ".."))
             {
                 //cout<<fileName<<endl;
+                fileNameVector.push_back(fileName);
                 readEachFile(fileName, c);
                 c++;
             }
@@ -54,6 +55,7 @@ void Cluster::readFolder()
     //     }
     //     cout<<endl;
     // }
+    clusterImages();
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
@@ -107,7 +109,6 @@ void Cluster::readEachFile(string fileName, int c)
         //NOW WE CAN GATHER THE BLOCK BYTES
         else
         {
-
             fileList.push_back(new int *[Nrows]);
             for (int j = 0; j < Nrows; j++)
             {
@@ -116,6 +117,7 @@ void Cluster::readEachFile(string fileName, int c)
                 {
                     int gs = (0.21 * ppmFile.get()) + (0.72 * ppmFile.get()) + (0.07 * ppmFile.get());
                     //cout<<gs;
+
                     fileList[c][j][k] = gs;
                 }
                 //cout<<endl;
@@ -130,16 +132,15 @@ void Cluster::readEachFile(string fileName, int c)
 void Cluster::imageFeature()
 {
 
-
-    int histogramSize = ceil(256 / histogramWidth);
+    histogramSize = ceil(256 / histogramWidth);
     for (int imageC = 0; imageC < fileList.size(); imageC++)
     {
         histogramArray.push_back(new int[histogramSize]);
         for (int k = 0; k < histogramSize; k++)
         {
-            histogramArray[imageC][k]=0;
+            histogramArray[imageC][k] = 0;
         }
-        
+
         for (int i = 0; i < Nrows; i++)
         {
             for (int j = 0; j < Ncols; j++)
@@ -148,23 +149,55 @@ void Cluster::imageFeature()
 
                 histogramArray[imageC][val]++;
             }
-            
         }
-        
     }
 
-for (int imageC = 0; imageC < histogramArray.size(); imageC++)
+    // for (int i = 0; i < histogramArray.size(); i++)
+    //     {
+    //         cout << "[ ";
+    //         for (int j = 0; j < histogramSize; j++)
+    //         {
+    //             cout << histogramArray[i][j] << " ";
+    //         }
+    //         cout << " ]\n";
+
+    //     }
+}
+void Cluster::clusterImages()
+{
+    for (int i = 0; i < noOfClusters; i++)
     {
-        for (int i = 0; i < histogramSize; i++)
+        int ranVal = rand() % histogramArray.size();
+        vector<int> temp;
+        for (int i = 0; i < noOfClusters; i++)
         {
-            cout<<i<<"======>"<< histogramArray[imageC][i]<<endl;
-            
+            temp.push_back(ranVal);
         }
-        
+        matrix.push_back(temp);
     }
-   
 
-        
+    for (int i = 0; i < histogramArray.size(); i++)
+    {
 
+        for (int j = 0; j < matrix.size(); j++)
+        {
+            double mean = (__DBL_MAX__);
+            int addition = 0;
+
+            for (int k = 0; k < histogramSize; k++)
+            {
+
+                int val = histogramArray[matrix[j][0]][k] - histogramArray[i][k];
+                int square = val * val;
+                addition += square;
+            }
+            cout << sqrt(addition) << "          ";
+        }
+        cout << endl;
+        // if (distance < mean)
+        // {
+        //     mean = distance;
+        // }
+    }
 }
 } // namespace THNGEO002

@@ -7,6 +7,7 @@
 #include <sstream>
 #include <dirent.h>
 #include <stdio.h>
+#include <cstdlib>
 namespace THNGEO002
 {
     using namespace std;
@@ -20,9 +21,12 @@ private:                                  // private members
     int histogramWidth;
     int Nrows;
     int Ncols;
+    int histogramSize;
+    std::vector<string> fileNameVector;
     
     std::vector<int **> fileList;
     std::vector<int *>histogramArray;
+    std::vector<std::vector<int>> matrix;
     
 public:                                   // public members
     Cluster(string outputFile,int noOfClusters,int histogramWidth,const char* dataset);                           //constructor - define in .cpp
@@ -30,6 +34,7 @@ public:                                   // public members
     void readFolder(); //method to read files from the folder into a vector
     void readEachFile(std::string fileName,int c); //method to read each file and store ts greyscale equivalent    
     void imageFeature(); //method to create the histogram image feature
+    void clusterImages(); 
 };
 
 } // namespace THNGEO002
