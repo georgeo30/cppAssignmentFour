@@ -28,7 +28,7 @@ private:                                  // private members
     std::vector<int *>histogramArray;
     std::vector<std::vector<int>> matrix;
     std::vector<double> meansZZ;
-        std::vector<int *>clusterMeans;
+        std::vector<double *>clusterMeans;
 
     
 public:                                   // public members

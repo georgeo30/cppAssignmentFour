@@ -56,6 +56,7 @@ void Cluster::readFolder()
     //     cout<<endl;
     // }
     initializeClusters();
+    adjustMeans();
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
@@ -208,24 +209,22 @@ void Cluster::initializeClusters()
         matrix[clusterItBelongsToo].push_back(i);
     }
 
-    for (int i = 0; i < matrix.size(); i++)
-    {
-        for (int j = 0; j < matrix[i].size(); j++)
-        {
-            cout << i << " " << j << " =====> " << matrix[i][j] << endl;
-        }
-        cout << endl
-             << endl;
-    }
-
-    adjustMeans();
+    // for (int i = 0; i < matrix.size(); i++)
+    // {
+    //     for (int j = 0; j < matrix[i].size(); j++)
+    //     {
+    //         cout << i << " " << j << " =====> " << matrix[i][j] << endl;
+    //     }
+    //     cout << endl
+    //          << endl;
+    // }
 }
 
 void Cluster::adjustMeans()
 {
     for (int i = 0; i < noOfClusters; i++)
     {
-        clusterMeans.push_back(new int[histogramSize]);
+        clusterMeans.push_back(new double[histogramSize]);
         for (int k = 0; k < histogramSize; k++)
 
         {
@@ -235,7 +234,7 @@ void Cluster::adjustMeans()
             {
                 total += histogramArray[matrix[i][j]][k];
             }
-            cout << k << " ===========> " << total / matrix[i].size() << endl;
+            clusterMeans[i][k] = total / matrix[i].size();
         }
     }
 }
