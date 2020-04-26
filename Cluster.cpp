@@ -175,13 +175,13 @@ void Cluster::clusterImages()
         }
         matrix.push_back(temp);
     }
-
     for (int i = 0; i < histogramArray.size(); i++)
     {
+        int clusterItBelongsToo;
+        double mean = (__DBL_MAX__);
 
         for (int j = 0; j < matrix.size(); j++)
         {
-            double mean = (__DBL_MAX__);
             int addition = 0;
 
             for (int k = 0; k < histogramSize; k++)
@@ -191,13 +191,31 @@ void Cluster::clusterImages()
                 int square = val * val;
                 addition += square;
             }
-            cout << sqrt(addition) << "          ";
+            double distance = sqrt(addition);
+            if (distance <= mean)
+            {
+                mean = distance;
+                clusterItBelongsToo = j;
+                
+            }
         }
-        cout << endl;
+        cout << clusterItBelongsToo << endl;
+        matrix[clusterItBelongsToo].push_back(i);
+
         // if (distance < mean)
         // {
         //     mean = distance;
         // }
+    }
+
+    for (int i = 0; i < matrix.size(); i++)
+    {
+        for (int j = 0; j < matrix[i].size(); j++)
+        {
+            cout<<i<<" "<<j<<" =====> "<<matrix[i][j]<<endl;
+        }
+        cout<<endl<<endl;
+
     }
 }
 } // namespace THNGEO002
