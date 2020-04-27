@@ -193,7 +193,6 @@ void Cluster::initializeClusters()
     for (int i = 0; i < noOfClusters; i++)
     {
         int ranVal = rand() % (histogramArray.size());
-        cout << ranVal << endl;
         meansZZ.push_back(ranVal);
     }
     matrix.resize(noOfClusters);
@@ -310,5 +309,7 @@ void Cluster::iterationCluster()
         cout << i << " =====> " << matrix[i].size() << endl;
     }
 }
-
+void Cluster::nowDoItIteratively(){
+    
+}
 } // namespace THNGEO002

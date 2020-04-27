@@ -41,6 +41,7 @@ public:                                   // public members
     void initializeClusters(); //initialize clusters INITIALIZATION STEP 
     void adjustMeans();
     void iterationCluster();
+    void nowDoItIteratively();
 };
 
 } // namespace THNGEO002
