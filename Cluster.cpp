@@ -58,6 +58,27 @@ void Cluster::readFolder()
     initializeClusters();
     adjustMeans();
     iterationCluster();
+    adjustMeans();
+    iterationCluster();
+    adjustMeans();
+    iterationCluster();
+    adjustMeans();
+    iterationCluster();
+
+    adjustMeans();
+    iterationCluster();
+
+    adjustMeans();
+     iterationCluster();
+    adjustMeans();
+    iterationCluster();
+    adjustMeans();
+    iterationCluster();
+
+    adjustMeans();
+    iterationCluster();
+
+    adjustMeans();
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
@@ -168,14 +189,15 @@ void Cluster::imageFeature()
 void Cluster::initializeClusters()
 {
     //POPULATING THE CLUSTER MATRIX WITH INITIAL HISTOGRAMS
+    srand(time(0));
     for (int i = 0; i < noOfClusters; i++)
     {
         int ranVal = rand() % (histogramArray.size());
-        vector<int> temp;
+        cout << ranVal << endl;
         meansZZ.push_back(ranVal);
-        temp.push_back(ranVal);
-        matrix.resize(noOfClusters);
     }
+    matrix.resize(noOfClusters);
+
     //LOOPING THROUGH THE HISTOGRAMS TO ADD TO CLUSTERS
     for (int i = 0; i < histogramArray.size(); i++)
     {
@@ -190,14 +212,13 @@ void Cluster::initializeClusters()
             //LOOPING THROUGH THE PIXELS AND PERFORMING CALCULATION
             for (int k = 0; k < histogramSize; k++)
             {
-
                 int val = histogramArray[meansZZ[j]][k] - histogramArray[i][k];
                 int square = val * val;
                 bSquareTotal += square;
             }
 
             double distance = sqrt(bSquareTotal);
-
+            // cout<<"For image "<<i<<" and cluster "<<j<<" The mean distance is "<<distance<<endl;
             //CONDITION TO SEE IF IT IS SMALLER THAN PREVIOUS CLUSTER
             if (distance <= mean)
             {
@@ -206,18 +227,16 @@ void Cluster::initializeClusters()
                 clusterItBelongsToo = j;
             }
         }
+        // cout<<"Image "<<i<<" belongs too "<<clusterItBelongsToo<<endl;
+        //     cout<<"-------------------------------------------------"<<endl;
         //ASSIGN TO THE CORRESPONDING CLUSTER
         matrix[clusterItBelongsToo].push_back(i);
     }
 
     for (int i = 0; i < matrix.size(); i++)
     {
-        for (int j = 0; j < matrix[i].size(); j++)
-        {
-            cout << i << " " << j << " =====> " << matrix[i][j] << endl;
-        }
-        cout << endl
-             << endl;
+
+        cout << i << " =====> " << matrix[i].size() << endl;
     }
 }
 
@@ -226,16 +245,24 @@ void Cluster::adjustMeans()
     for (int i = 0; i < noOfClusters; i++)
     {
         clusterMeans.push_back(new double[histogramSize]);
-        for (int k = 0; k < histogramSize; k++)
+        for (int j = 0; j < histogramSize; j++)
 
         {
             double total = 0;
-
-            for (int j = 0; j < matrix[i].size(); j++)
+            if (matrix[i].size() == 0)
             {
-                total += histogramArray[matrix[i][j]][k];
+
+                clusterMeans[i][j] = 0;
             }
-            clusterMeans[i][k] = total / matrix[i].size();
+            else
+            {
+                for (int k = 0; k < matrix[i].size(); k++)
+                {
+                    total += histogramArray[matrix[i][k]][j];
+                }
+                clusterMeans[i][j] = total / matrix[i].size();
+            }
+            // cout<<"Cluster "<<i<<" Histogram increment "<<clusterMeans[i][j]<<" And total is"<<total<<endl;
         }
     }
 }
@@ -261,6 +288,7 @@ void Cluster::iterationCluster()
                 meanVal += square;
             }
             double distance = sqrt(meanVal);
+            //cout<<"For image "<<i<<" and cluster "<<j<<" The mean distance is "<<distance<<endl;
             //CONDITION TO SEE IF IT IS SMALLER THAN PREVIOUS CLUSTER
             if (distance <= mean)
             {
@@ -269,12 +297,18 @@ void Cluster::iterationCluster()
                 clusterItBelongsToo = j;
             }
         }
-        cout << clusterItBelongsToo << endl;
+        // cout<<"Image "<<i<<" belongs too "<<clusterItBelongsToo<<endl;
+        //     cout<<"-------------------------------------------------"<<endl;
         matrix[clusterItBelongsToo].push_back(i);
     }
-    
-    
 
+    cout << "-----------------------------------------------------" << endl;
+
+    for (int i = 0; i < matrix.size(); i++)
+    {
+
+        cout << i << " =====> " << matrix[i].size() << endl;
+    }
 }
 
 } // namespace THNGEO002

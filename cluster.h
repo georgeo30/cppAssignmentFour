@@ -8,6 +8,7 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <cstdlib>
+#include <ctime>    // For time()
 namespace THNGEO002
 {
     using namespace std;
