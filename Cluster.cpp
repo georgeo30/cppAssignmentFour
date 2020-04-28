@@ -56,22 +56,28 @@ void Cluster::readFolder()
     //     cout<<endl;
     // }
 
-    
     initializeClusters();
-            adjustMeans();
-bool  check=true;
-    while (check==true)
+    adjustMeans();
+    bool check = true;
+    while (check == true)
     {
 
-        cout<<"wazzaaa"<<endl;
         copyMeans();
-        
+
         iterationCluster();
         adjustMeans();
-        check=compareMeans();
-        cout<<check<<endl;
+        check = compareMeans();
     }
-    
+      for (int i = 0; i < matrix.size(); i++)
+    {
+
+        cout << "Cluster: "<<i <<" ";
+        for (int j = 0; j < matrix[i].size(); j++)
+        {
+            cout <<", "<< fileNameVector[matrix[i][j]];
+        }
+        cout<<endl;
+    }
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
@@ -225,19 +231,22 @@ void Cluster::initializeClusters()
         //ASSIGN TO THE CORRESPONDING CLUSTER
         matrix[clusterItBelongsToo].push_back(i);
     }
+    // for (int i = 0; i < matrix.size(); i++)
+    // {
+    //     cout << "======================================================" << endl;
 
-    for (int i = 0; i < matrix.size(); i++)
-    {
-
-        cout << i << " =====> " << matrix[i].size() << endl;
-    }
+    //     for (int j = 0; j < matrix[i].size(); j++)
+    //     {
+    //         cout << i << "  " << j << " =====> " << fileNameVector[matrix[i][j]] << endl;
+    //     }
+    // }
 }
 
 void Cluster::adjustMeans()
 {
     for (int i = 0; i < noOfClusters; i++)
     {
-        
+
         for (int j = 0; j < histogramSize; j++)
 
         {
@@ -297,11 +306,15 @@ void Cluster::iterationCluster()
 
     cout << "-----------------------------------------------------" << endl;
 
-    for (int i = 0; i < matrix.size(); i++)
-    {
+    // for (int i = 0; i < matrix.size(); i++)
+    // {
+    //     cout << "======================================================" << endl;
 
-        cout << i << " =====> " << matrix[i].size() << endl;
-    }
+    //     for (int j = 0; j < matrix[i].size(); j++)
+    //     {
+    //         cout << i << "  " << j << " =====> " << fileNameVector[matrix[i][j]] << endl;
+    //     }
+    // }
 }
 void Cluster::copyMeans()
 {
@@ -314,19 +327,17 @@ void Cluster::copyMeans()
         }
     }
 }
-bool Cluster::compareMeans(){
-    cout<<clusterMeans.size()<<endl;
+bool Cluster::compareMeans()
+{
     for (int i = 0; i < clusterMeans.size(); i++)
     {
         for (int j = 0; j < histogramSize; j++)
         {
-            if(!(clusterMeansCompare[i][j] == clusterMeans[i][j])){
-                cout<<"from cluster "<<i<< " from histogram "<<j<<endl;
-                
+            if (!(clusterMeansCompare[i][j] == clusterMeans[i][j]))
+            {
+
                 return true;
             }
-                            cout<<"from cluster "<<i<< " from histogram "<<j<<endl;
-
         }
     }
     return false;
