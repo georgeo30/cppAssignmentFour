@@ -57,28 +57,7 @@ void Cluster::readFolder()
     // }
     initializeClusters();
     adjustMeans();
-    iterationCluster();
-    adjustMeans();
-    iterationCluster();
-    adjustMeans();
-    iterationCluster();
-    adjustMeans();
-    iterationCluster();
-
-    adjustMeans();
-    iterationCluster();
-
-    adjustMeans();
-     iterationCluster();
-    adjustMeans();
-    iterationCluster();
-    adjustMeans();
-    iterationCluster();
-
-    adjustMeans();
-    iterationCluster();
-
-    adjustMeans();
+    copyMeans();
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
@@ -309,7 +288,15 @@ void Cluster::iterationCluster()
         cout << i << " =====> " << matrix[i].size() << endl;
     }
 }
-void Cluster::nowDoItIteratively(){
-    
+void Cluster::copyMeans()
+{
+    for (int i = 0; i < clusterMeans.size(); i++)
+    {
+        clusterMeansCompare.push_back(new double[histogramSize]);
+        for (int j = 0; j < histogramSize; j++)
+        {
+            clusterMeansCompare[i][j] = clusterMeans[i][j];
+        }
+    }
 }
 } // namespace THNGEO002

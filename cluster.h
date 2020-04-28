@@ -30,6 +30,8 @@ private:                                  // private members
     std::vector<std::vector<int>> matrix;
     std::vector<double> meansZZ;
         std::vector<double *>clusterMeans;
+                std::vector<double *>clusterMeansCompare;
+
 
     
 public:                                   // public members
@@ -41,7 +43,7 @@ public:                                   // public members
     void initializeClusters(); //initialize clusters INITIALIZATION STEP 
     void adjustMeans();
     void iterationCluster();
-    void nowDoItIteratively();
+    void copyMeans();
 };
 
 } // namespace THNGEO002
