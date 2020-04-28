@@ -41,9 +41,10 @@ public:                                   // public members
     void readEachFile(std::string fileName,int c); //method to read each file and store ts greyscale equivalent    
     void imageFeature(); //method to create the histogram image feature
     void initializeClusters(); //initialize clusters INITIALIZATION STEP 
-    void adjustMeans();
-    void iterationCluster();
-    void copyMeans();
+    void adjustMeans();//adjusting the means of tthe clusters
+    void iterationCluster();//process to get new image distance and place in new cluster
+    void copyMeans();//copying the means tocompare.
+    bool compareMeans();
 };
 
 } // namespace THNGEO002

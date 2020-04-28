@@ -55,9 +55,23 @@ void Cluster::readFolder()
     //     }
     //     cout<<endl;
     // }
+
+    
     initializeClusters();
-    adjustMeans();
-    copyMeans();
+            adjustMeans();
+bool  check=true;
+    while (check==true)
+    {
+
+        cout<<"wazzaaa"<<endl;
+        copyMeans();
+        
+        iterationCluster();
+        adjustMeans();
+        check=compareMeans();
+        cout<<check<<endl;
+    }
+    
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
@@ -173,6 +187,7 @@ void Cluster::initializeClusters()
     {
         int ranVal = rand() % (histogramArray.size());
         meansZZ.push_back(ranVal);
+        clusterMeans.push_back(new double[histogramSize]);
     }
     matrix.resize(noOfClusters);
 
@@ -222,7 +237,7 @@ void Cluster::adjustMeans()
 {
     for (int i = 0; i < noOfClusters; i++)
     {
-        clusterMeans.push_back(new double[histogramSize]);
+        
         for (int j = 0; j < histogramSize; j++)
 
         {
@@ -298,5 +313,22 @@ void Cluster::copyMeans()
             clusterMeansCompare[i][j] = clusterMeans[i][j];
         }
     }
+}
+bool Cluster::compareMeans(){
+    cout<<clusterMeans.size()<<endl;
+    for (int i = 0; i < clusterMeans.size(); i++)
+    {
+        for (int j = 0; j < histogramSize; j++)
+        {
+            if(!(clusterMeansCompare[i][j] == clusterMeans[i][j])){
+                cout<<"from cluster "<<i<< " from histogram "<<j<<endl;
+                
+                return true;
+            }
+                            cout<<"from cluster "<<i<< " from histogram "<<j<<endl;
+
+        }
+    }
+    return false;
 }
 } // namespace THNGEO002
