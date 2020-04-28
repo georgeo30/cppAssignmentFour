@@ -71,10 +71,17 @@ void Cluster::readFolder()
       for (int i = 0; i < matrix.size(); i++)
     {
 
-        cout << "Cluster: "<<i <<" ";
+        cout << "Cluster: "<<i <<" : ";
         for (int j = 0; j < matrix[i].size(); j++)
         {
-            cout <<", "<< fileNameVector[matrix[i][j]];
+            if (j==matrix[i].size()-1)
+            {
+                cout << fileNameVector[matrix[i][j]];
+            }
+            else{
+                            cout << fileNameVector[matrix[i][j]]<<", ";
+
+            }
         }
         cout<<endl;
     }
@@ -304,7 +311,7 @@ void Cluster::iterationCluster()
         matrix[clusterItBelongsToo].push_back(i);
     }
 
-    cout << "-----------------------------------------------------" << endl;
+    //cout << "-----------------------------------------------------" << endl;
 
     // for (int i = 0; i < matrix.size(); i++)
     // {
