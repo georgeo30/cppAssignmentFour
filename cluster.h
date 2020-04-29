@@ -45,6 +45,8 @@ public:                                   // public members
     void iterationCluster();//process to get new image distance and place in new cluster
     void copyMeans();//copying the means tocompare.
     bool compareMeans();
+    friend ostream& operator<<(ostream& os, const Cluster& c);
+
 };
 
 } // namespace THNGEO002

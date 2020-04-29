@@ -90,11 +90,10 @@ int main(int argc, char *argv[])
         noOfClusters = 10;
         histogramWidth = 1;
     }
-    cout << outputFile << endl;
-    cout << noOfClusters << endl;
-    cout << histogramWidth << endl;
+    
 
     THNGEO002::Cluster c(outputFile,noOfClusters,histogramWidth,argv[1]);
     c.readFolder();
+    cout<<c;
 
 }

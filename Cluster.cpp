@@ -68,23 +68,23 @@ void Cluster::readFolder()
         adjustMeans();
         check = compareMeans();
     }
-      for (int i = 0; i < matrix.size(); i++)
-    {
+    //   for (int i = 0; i < matrix.size(); i++)
+    // {
 
-        cout << "Cluster: "<<i <<" : ";
-        for (int j = 0; j < matrix[i].size(); j++)
-        {
-            if (j==matrix[i].size()-1)
-            {
-                cout << fileNameVector[matrix[i][j]];
-            }
-            else{
-                            cout << fileNameVector[matrix[i][j]]<<", ";
+    //     cout << "Cluster: "<<i <<" : ";
+    //     for (int j = 0; j < matrix[i].size(); j++)
+    //     {
+    //         if (j==matrix[i].size()-1)
+    //         {
+    //             cout << fileNameVector[matrix[i][j]];
+    //         }
+    //         else{
+    //                         cout << fileNameVector[matrix[i][j]]<<", ";
 
-            }
-        }
-        cout<<endl;
-    }
+    //         }
+    //     }
+    //     cout<<endl;
+    // }
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
@@ -348,5 +348,26 @@ bool Cluster::compareMeans()
         }
     }
     return false;
+}
+ostream& operator<<(ostream& os, const Cluster& c)
+{
+    for (int i = 0; i < c.matrix.size(); i++)
+    {
+
+        os << "Cluster: "<<i <<" : ";
+        for (int j = 0; j < c.matrix[i].size(); j++)
+        {
+            if (j==c.matrix[i].size()-1)
+            {
+                os << c.fileNameVector[c.matrix[i][j]];
+            }
+            else{
+                            os << c.fileNameVector[c.matrix[i][j]]<<", ";
+
+            }
+        }
+        os<<endl;
+    }
+    return os;
 }
 } // namespace THNGEO002
