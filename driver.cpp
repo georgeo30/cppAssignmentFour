@@ -94,6 +94,16 @@ int main(int argc, char *argv[])
 
     THNGEO002::Cluster c(outputFile,noOfClusters,histogramWidth,argv[1]);
     c.readFolder();
-    cout<<c;
+    if (outputFile=="toConsoleDefault")
+    {
+        cout<<c;
+    }
+    else{
+        ofstream myfile;
+        myfile.open (outputFile+".txt");
+        myfile<<c;
+        myfile.close();
+    }
+    
 
 }

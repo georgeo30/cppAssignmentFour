@@ -23,11 +23,10 @@ private:                                  // private members
     int Nrows;
     int Ncols;
     int histogramSize;
-    std::vector<string> fileNameVector;
     
     std::vector<int **> fileList;
     std::vector<int *>histogramArray;
-    std::vector<std::vector<int>> matrix;
+    
     std::vector<double> meansZZ;
         std::vector<double *>clusterMeans;
                 std::vector<double *>clusterMeansCompare;
@@ -35,6 +34,9 @@ private:                                  // private members
 
     
 public:                                   // public members
+std::vector<std::vector<int>> matrix;
+    std::vector<string> fileNameVector;
+
     Cluster(string outputFile,int noOfClusters,int histogramWidth,const char* dataset);                           //constructor - define in .cpp
     ~Cluster();                          // destructor - define in .cpp file
     void readFolder(); //method to read files from the folder into a vector
@@ -48,6 +50,7 @@ public:                                   // public members
     friend ostream& operator<<(ostream& os, const Cluster& c);
 
 };
+ostream& operator<<(ostream& os, const Cluster& c);
 
 } // namespace THNGEO002
 #endif
