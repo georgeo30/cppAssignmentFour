@@ -4,6 +4,7 @@
 #include "cluster.h"
 #include <sstream>
 #include <cmath>
+#include <algorithm>
 
 using namespace std;
 namespace THNGEO002
@@ -68,7 +69,6 @@ void Cluster::readFolder()
         adjustMeans();
         check = compareMeans();
     }
-    
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
@@ -180,10 +180,20 @@ void Cluster::initializeClusters()
 {
     //POPULATING THE CLUSTER MATRIX WITH INITIAL HISTOGRAMS
     srand(time(0));
+    std::vector<int> numbers;
+
+    for (int i = 0; i < fileNameVector.size(); i++) // add 0-99 to the vector
+    {
+        numbers.push_back(i);
+    }
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(numbers.begin(), numbers.end(), std::default_random_engine(seed));
     for (int i = 0; i < noOfClusters; i++)
     {
-        int ranVal = rand() % (histogramArray.size());
-        meansZZ.push_back(ranVal);
+        //int ranVal = rand() % (histogramArray.size());
+
+        meansZZ.push_back(numbers[i]);
+
         clusterMeans.push_back(new double[histogramSize]);
     }
     matrix.resize(noOfClusters);
@@ -334,26 +344,25 @@ bool Cluster::compareMeans()
     return false;
 }
 
-
 } // namespace THNGEO002
-ostream& THNGEO002::operator<<(ostream& os, const THNGEO002::Cluster& c)
+ostream &THNGEO002::operator<<(ostream &os, const THNGEO002::Cluster &c)
 {
     for (int i = 0; i < c.matrix.size(); i++)
     {
 
-        os << "Cluster: "<<i <<" : ";
+        os << "Cluster: " << i << " : ";
         for (int j = 0; j < c.matrix[i].size(); j++)
         {
-            if (j==c.matrix[i].size()-1)
+            if (j == c.matrix[i].size() - 1)
             {
                 os << c.fileNameVector[c.matrix[i][j]];
             }
-            else{
-                            os << c.fileNameVector[c.matrix[i][j]]<<", ";
-
+            else
+            {
+                os << c.fileNameVector[c.matrix[i][j]] << ", ";
             }
         }
-        os<<endl;
+        os << endl;
     }
     return os;
 }

@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <cstdlib>
 #include <ctime>    // For time()
+#include <chrono>
+#include <random>
 namespace THNGEO002
 {
     using namespace std;
