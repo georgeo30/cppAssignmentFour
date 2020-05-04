@@ -90,20 +90,18 @@ int main(int argc, char *argv[])
         noOfClusters = 10;
         histogramWidth = 1;
     }
-    
 
-    THNGEO002::Cluster c(outputFile,noOfClusters,histogramWidth,argv[1]);
+    THNGEO002::Cluster c(outputFile, noOfClusters, histogramWidth, argv[1]);
     c.readFolder();
-    if (outputFile=="toConsoleDefault")
+    if (outputFile == "toConsoleDefault")
     {
-        cout<<c;
+        cout << c;
     }
-    else{
+    else
+    {
         ofstream myfile;
-        myfile.open (outputFile+".txt");
-        myfile<<c;
+        myfile.open(outputFile + ".txt");
+        myfile << c;
         myfile.close();
     }
-    
-
 }

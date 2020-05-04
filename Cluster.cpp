@@ -16,6 +16,23 @@ Cluster::Cluster(string outputFile, int noOfClusters, int histogramWidth, const 
 // destructor
 Cluster::~Cluster()
 {
+    for (int i = 0; i < fileList.size(); i++)
+    {
+        for (int j = 0; j < Nrows; j++)
+        {
+            delete fileList[i][j];
+        }
+        delete fileList[i];
+    }
+    for (int i = 0; i < histogramArray.size(); i++)
+    {
+        delete histogramArray[i];
+    }
+    for (int i = 0; i < clusterMeans.size(); i++)
+    {
+        delete clusterMeansCompare[i];
+        delete clusterMeans[i];
+    }
 }
 
 //METHOD TO READ THE FILES INTO A VECTOR
@@ -48,14 +65,6 @@ void Cluster::readFolder()
     }
 
     imageFeature();
-    //  for (int i = 0; i < 32; i++)
-    // {
-    //     for (int r = 0; r < 32; r++)
-    //     {
-    //          cout<<fileList[0][i][r]*1<<" ";
-    //     }
-    //     cout<<endl;
-    // }
 
     initializeClusters();
     adjustMeans();
@@ -72,7 +81,7 @@ void Cluster::readFolder()
 }
 
 //METHOD TO READ EACH FILE IN THE VECTOR AND STORE ITS GREYSCALE VALUES
-void Cluster::readEachFile(string fileName, int c)
+void Cluster::readEachFile(const string fileName, int c)
 {
     string fName(dataset);
     string sliceUrl = "./" + fName + "/" + fileName;
@@ -86,7 +95,6 @@ void Cluster::readEachFile(string fileName, int c)
         if (track == 0)
         {
             getline(ppmFile, line);
-            //cout << "First line is" << line << endl;
             track++;
         }
         //CHECKS FOR SECOND LINE BUT TAKES THE COMMENT LINES INTO ACCOUNT
@@ -97,13 +105,11 @@ void Cluster::readEachFile(string fileName, int c)
             //CHEECKING TO SEE WHETHER IT IS A COMMENT LINE
             if (line.at(0) == '#')
             {
-                //cout << "comment line in header" << endl;
             }
             //IF NOT COMMENT LINE THEN EXTRACT THE ROWS AND COLUMNS
             else
             {
 
-                //cout << "second line is" << line << endl;
                 //GETTING THE NROWS AND NCOLUMNS FROM THE HEADER INFORMATION
                 std::istringstream ss(line);
                 std::string token;
@@ -116,7 +122,6 @@ void Cluster::readEachFile(string fileName, int c)
         else if (track == 2)
         {
             getline(ppmFile, line);
-            //cout << "Third line is" << line << endl;
             track++;
         }
         //NOW WE CAN GATHER THE BLOCK BYTES
@@ -128,12 +133,11 @@ void Cluster::readEachFile(string fileName, int c)
                 fileList[c][j] = new int[Ncols];
                 for (int k = 0; k < Ncols; k++)
                 {
+                    //CONVERSION TO GREYSCALE
                     int gs = (0.21 * ppmFile.get()) + (0.72 * ppmFile.get()) + (0.07 * ppmFile.get());
-                    //cout<<gs;
-
+                    //STORING GREYSCALE VALUE
                     fileList[c][j][k] = gs;
                 }
-                //cout<<endl;
             }
             ppmFile.get();
         }
@@ -144,16 +148,19 @@ void Cluster::readEachFile(string fileName, int c)
 //METHOD TO CREATE THE HISTOGRAM IMAGE FEATURE
 void Cluster::imageFeature()
 {
-
+    //GETTING TO KNOW THE HISTOGRAM SIZE
     histogramSize = ceil(256 / histogramWidth);
+    //LOOPINNG THROUGH THE IMAGES
     for (int imageC = 0; imageC < fileList.size(); imageC++)
     {
         histogramArray.push_back(new int[histogramSize]);
+        //ASSIGNING ZERO TO ALL THE ELEMENTS IN HISTOGRAM BECAUSE C++ IS WEIRD
         for (int k = 0; k < histogramSize; k++)
         {
             histogramArray[imageC][k] = 0;
         }
-
+        //INNER LOOP TO LOOP THROUGH THE PIXEL(GREYSCALE VALUE) AND PERFORM INTEGER DIVISION TO KNOW WHICH
+        //ELEMENT TO INCREMENT
         for (int i = 0; i < Nrows; i++)
         {
             for (int j = 0; j < Ncols; j++)
@@ -164,38 +171,29 @@ void Cluster::imageFeature()
             }
         }
     }
-
-    // for (int i = 0; i < histogramArray.size(); i++)
-    //     {
-    //         cout << "[ ";
-    //         for (int j = 0; j < histogramSize; j++)
-    //         {
-    //             cout << histogramArray[i][j] << " ";
-    //         }
-    //         cout << " ]\n";
-
-    //     }
 }
 void Cluster::initializeClusters()
 {
     //POPULATING THE CLUSTER MATRIX WITH INITIAL HISTOGRAMS
     srand(time(0));
     std::vector<int> numbers;
-
-    for (int i = 0; i < fileNameVector.size(); i++) // add 0-99 to the vector
+    //INITIALIZING A NUMBERS VECTOR WITH ITS OWN INDEXES AS ITS VALUES
+    for (int i = 0; i < fileNameVector.size(); i++)
     {
         numbers.push_back(i);
     }
+    // SHUFFELING THE NUMBERS VECTOR SO THAT A TRUE RANDOM IMAGE CAN BE PICKED
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::shuffle(numbers.begin(), numbers.end(), std::default_random_engine(seed));
+    //CHOOSING A RANDOM HISTOGRAM  FOR EACH CLUSTER
     for (int i = 0; i < noOfClusters; i++)
     {
-        //int ranVal = rand() % (histogramArray.size());
 
         meansZZ.push_back(numbers[i]);
-
+        //EACH CLUSTER HAS AN HISTOGRAM
         clusterMeans.push_back(new double[histogramSize]);
     }
+    //RESIZING HE MATRIX TO THE NUMBER OF CLUSTERS
     matrix.resize(noOfClusters);
 
     //LOOPING THROUGH THE HISTOGRAMS TO ADD TO CLUSTERS
@@ -218,7 +216,6 @@ void Cluster::initializeClusters()
             }
 
             double distance = sqrt(bSquareTotal);
-            // cout<<"For image "<<i<<" and cluster "<<j<<" The mean distance is "<<distance<<endl;
             //CONDITION TO SEE IF IT IS SMALLER THAN PREVIOUS CLUSTER
             if (distance <= mean)
             {
@@ -227,27 +224,17 @@ void Cluster::initializeClusters()
                 clusterItBelongsToo = j;
             }
         }
-        // cout<<"Image "<<i<<" belongs too "<<clusterItBelongsToo<<endl;
-        //     cout<<"-------------------------------------------------"<<endl;
         //ASSIGN TO THE CORRESPONDING CLUSTER
         matrix[clusterItBelongsToo].push_back(i);
     }
-    // for (int i = 0; i < matrix.size(); i++)
-    // {
-    //     cout << "======================================================" << endl;
-
-    //     for (int j = 0; j < matrix[i].size(); j++)
-    //     {
-    //         cout << i << "  " << j << " =====> " << fileNameVector[matrix[i][j]] << endl;
-    //     }
-    // }
 }
-
+//METHOD TO ADJUST THE MEANS
 void Cluster::adjustMeans()
 {
+    //LOOPING THROUGH THE NUMBER OF CLUSTERS
     for (int i = 0; i < noOfClusters; i++)
     {
-
+        //LOOPING THROUGH HISTOGRAM SIZE TO GET ACCESS TO EACH INDEX
         for (int j = 0; j < histogramSize; j++)
 
         {
@@ -259,30 +246,33 @@ void Cluster::adjustMeans()
             }
             else
             {
+                //LOOPING THROUGH THE IMAGES IN THE CLUSTERS TO GET THE MEAN
                 for (int k = 0; k < matrix[i].size(); k++)
                 {
                     total += histogramArray[matrix[i][k]][j];
                 }
                 clusterMeans[i][j] = total / matrix[i].size();
             }
-            // cout<<"Cluster "<<i<<" Histogram increment "<<clusterMeans[i][j]<<" And total is"<<total<<endl;
         }
     }
 }
+
+//ITERATION LOOP TO GET THE NEW CLUSTERS
 void Cluster::iterationCluster()
 {
     matrix.clear();
     matrix.resize(noOfClusters);
+    //LOOPING THROUGH THE IMAGES
     for (int i = 0; i < histogramArray.size(); i++)
     {
         int clusterItBelongsToo;
         double mean = (__DBL_MAX__);
-
+        //LOOPING THROUGH THE NO OF CLUSTERS
         for (int j = 0; j < matrix.size(); j++)
         {
 
             double meanVal = 0;
-
+            //LOOPING THROUGH THE HISTOGRAM
             for (int k = 0; k < histogramSize; k++)
             {
 
@@ -291,7 +281,6 @@ void Cluster::iterationCluster()
                 meanVal += square;
             }
             double distance = sqrt(meanVal);
-            //cout<<"For image "<<i<<" and cluster "<<j<<" The mean distance is "<<distance<<endl;
             //CONDITION TO SEE IF IT IS SMALLER THAN PREVIOUS CLUSTER
             if (distance <= mean)
             {
@@ -300,23 +289,11 @@ void Cluster::iterationCluster()
                 clusterItBelongsToo = j;
             }
         }
-        // cout<<"Image "<<i<<" belongs too "<<clusterItBelongsToo<<endl;
-        //     cout<<"-------------------------------------------------"<<endl;
+
         matrix[clusterItBelongsToo].push_back(i);
     }
-
-    //cout << "-----------------------------------------------------" << endl;
-
-    // for (int i = 0; i < matrix.size(); i++)
-    // {
-    //     cout << "======================================================" << endl;
-
-    //     for (int j = 0; j < matrix[i].size(); j++)
-    //     {
-    //         cout << i << "  " << j << " =====> " << fileNameVector[matrix[i][j]] << endl;
-    //     }
-    // }
 }
+//COPYING THE MEANS INTO A DUPLICATE VECTOR FOR COMPARISION IN FUTURE
 void Cluster::copyMeans()
 {
     for (int i = 0; i < clusterMeans.size(); i++)
@@ -328,6 +305,7 @@ void Cluster::copyMeans()
         }
     }
 }
+//COMPARING THE MEANS OF THE PREVIOUS AND CURRENT
 bool Cluster::compareMeans()
 {
     for (int i = 0; i < clusterMeans.size(); i++)
@@ -345,6 +323,8 @@ bool Cluster::compareMeans()
 }
 
 } // namespace THNGEO002
+
+//OPERATOR OVERLOADING
 ostream &THNGEO002::operator<<(ostream &os, const THNGEO002::Cluster &c)
 {
     for (int i = 0; i < c.matrix.size(); i++)
